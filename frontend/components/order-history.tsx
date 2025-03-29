@@ -1,0 +1,105 @@
+"use client"
+
+import { useState } from "react"
+import { ChevronDown, ChevronUp } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { mockOrders } from "@/lib/data"
+
+export default function OrderHistory() {
+  const [expandedOrders, setExpandedOrders] = useState<string[]>([])
+
+  const toggleOrderExpansion = (orderId: string) => {
+    setExpandedOrders((prev) => (prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]))
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+      case "approved":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100"
+      case "rejected":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+      case "completed":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100"
+    }
+  }
+
+  return (
+    <div className="rounded-lg border bg-card shadow-sm">
+      <div className="border-b p-6">
+        <h2 className="text-xl font-semibold">Order History</h2>
+      </div>
+
+      {mockOrders.length === 0 ? (
+        <div className="p-6 text-center">
+          <p className="text-muted-foreground">You haven't placed any orders yet.</p>
+        </div>
+      ) : (
+        <div className="divide-y">
+          {mockOrders.map((order) => (
+            <div key={order.id} className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-medium">Order #{order.id}</h3>
+                    <Badge className={getStatusColor(order.status)}>
+                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Placed on {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive: {new Date(order.items[0].receiveDate).toLocaleDateString()} | Return:{" "}
+                    {new Date(order.items[0].returnDate).toLocaleDateString()}
+                  </p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toggleOrderExpansion(order.id)}>
+                  {expandedOrders.includes(order.id) ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )}
+                </Button>
+              </div>
+
+              {expandedOrders.includes(order.id) && (
+                <div className="mt-4">
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium">Reason for Borrowing:</h4>
+                    <p className="text-sm text-muted-foreground">{order.items[0].reason}</p>
+                  </div>
+
+                  <h4 className="mb-2 text-sm font-medium">Items</h4>
+                  <div className="rounded-md border">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b bg-muted/50">
+                          <th className="px-4 py-2 text-left text-sm font-medium">Item</th>
+                          <th className="px-4 py-2 text-left text-sm font-medium">Quantity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {order.items.map((item) => (
+                          <tr key={item.productId} className="border-b last:border-0">
+                            <td className="px-4 py-3">{item.product.name}</td>
+                            <td className="px-4 py-3">1</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
