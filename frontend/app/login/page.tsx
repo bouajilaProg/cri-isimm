@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -11,19 +11,45 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import apiClient from "@/lib/apiClient"
+import { User, useUser } from "@/context/user-context"
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
+export default function Login() {
+  const [userCode, setUserCode] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
 
+  const { userData, setUserData } = useUser()
+
+
+  useEffect(() => {
+
+
+    if (userData.userCode !== "") {
+      router.push("/profile")
+      return
+    }
+
+    const userToken = localStorage.getItem("user-token")
+    if (userToken) {
+
+      apiClient.checkToken(userToken).then((data) => {
+        if (data) {
+          setUserData(data)
+          router.push("/profile")
+        }
+      })
+    }
+
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!email || !password) {
+    if (!userCode || !password) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -34,15 +60,10 @@ export default function LoginPage() {
 
     setIsLoading(true)
 
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false)
-      toast({
-        title: "Success",
-        description: "You have successfully logged in",
-      })
-      router.push("/profile")
-    }, 1500)
+    const token = await apiClient.login(userCode, password)
+    alert(token)
+    localStorage.setItem("user-token", token)
+    router.push("/profile")
   }
 
   return (
@@ -66,22 +87,19 @@ export default function LoginPage() {
           <div className="mt-8 rounded-lg border bg-card p-6 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Login Code</Label>
                 <Input
                   id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  placeholder="00000090"
+                  value={userCode}
+                  onChange={(e) => setUserCode(e.target.value)}
                 />
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Link href="#" className="text-xs text-primary hover:underline">
-                    Forgot password?
-                  </Link>
                 </div>
                 <div className="relative">
                   <Input

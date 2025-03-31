@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "Robotics Club Borrowing Platform",
   description: "Borrow robotics equipment for your projects",
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -21,7 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <OrderProvider>{children}</OrderProvider>
+          <UserProvider>
+            <OrderProvider>{children}</OrderProvider>
+          </UserProvider>
+
         </ThemeProvider>
       </body>
     </html>
@@ -31,3 +34,5 @@ export default function RootLayout({
 
 
 import './globals.css'
+import { UserProvider } from "@/context/user-context"
+

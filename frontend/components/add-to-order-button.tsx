@@ -65,6 +65,8 @@ export default function AddToOrderButton({ product }: AddToOrderButtonProps) {
   }
 
   const decreaseQuantity = () => {
+
+
     if (isInOrder) {
       if (currentQuantity > 1) {
         updateItemQuantity(product.id, currentQuantity - 1)

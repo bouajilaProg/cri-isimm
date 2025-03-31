@@ -88,7 +88,7 @@ export default function OrderTable() {
         <p className="mb-6 max-w-md text-muted-foreground">
           Browse our equipment catalog and add items to your order to get started.
         </p>
-        <Button href="/rt" asChild>
+        <Button asChild>
           <a href="/rt">Browse Equipment</a>
         </Button>
       </div>

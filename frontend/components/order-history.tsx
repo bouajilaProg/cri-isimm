@@ -54,8 +54,8 @@ export default function OrderHistory() {
                     Placed on {new Date(order.createdAt).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Receive: {new Date(order.items[0].receiveDate).toLocaleDateString()} | Return:{" "}
-                    {new Date(order.items[0].returnDate).toLocaleDateString()}
+                    Receive: {new Date(order.receiveDate).toLocaleDateString()} | Return:{" "}
+                    {new Date(order.returnDate).toLocaleDateString()}
                   </p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => toggleOrderExpansion(order.id)}>
@@ -71,7 +71,7 @@ export default function OrderHistory() {
                 <div className="mt-4">
                   <div className="mb-4">
                     <h4 className="text-sm font-medium">Reason for Borrowing:</h4>
-                    <p className="text-sm text-muted-foreground">{order.items[0].reason}</p>
+                    <p className="text-sm text-muted-foreground">{order.reason}</p>
                   </div>
 
                   <h4 className="mb-2 text-sm font-medium">Items</h4>

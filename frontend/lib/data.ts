@@ -10,9 +10,7 @@ export interface Product {
 export interface OrderItem {
   productId: string
   product: Product
-  receiveDate: string
-  returnDate: string
-  reason: string
+  quantity: number
 }
 
 export interface Order {
@@ -20,7 +18,10 @@ export interface Order {
   userId: string
   items: OrderItem[]
   status: "pending" | "approved" | "rejected" | "completed"
+  receiveDate: string
+  returnDate: string
   createdAt: string
+  reason: string
 }
 
 export interface User {
@@ -117,20 +118,19 @@ export const mockOrders: Order[] = [
       {
         productId: "1",
         product: products[0],
-        receiveDate: "2023-06-10",
-        returnDate: "2023-06-24",
-        reason: "Building a weather station for the science fair",
+        quantity: 2,
       },
       {
         productId: "5",
         product: products[4],
-        receiveDate: "2023-06-10",
-        returnDate: "2023-06-24",
-        reason: "Building a weather station for the science fair",
+        quantity: 1,
       },
     ],
     status: "completed",
-    createdAt: "2023-06-05",
+    receiveDate: "2023-06-01",
+    returnDate: "2023-06-15",
+    createdAt: "2023-05-15",
+    reason: "need for project",
   },
   {
     id: "order2",
@@ -139,13 +139,14 @@ export const mockOrders: Order[] = [
       {
         productId: "2",
         product: products[1],
-        receiveDate: "2023-07-15",
-        returnDate: "2023-07-29",
-        reason: "Creating a smart mirror project",
+        quantity: 1,
       },
     ],
     status: "approved",
-    createdAt: "2023-07-10",
+    receiveDate: "2023-07-15",
+    returnDate: "2023-07-29",
+    createdAt: "2023-06-15",
+    reason: "experimenting with new hardware",
   },
 ]
 
@@ -155,4 +156,3 @@ export const mockUser: User = {
   email: "alex.johnson@example.com",
   orders: mockOrders,
 }
-

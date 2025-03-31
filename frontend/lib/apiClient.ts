@@ -1,0 +1,88 @@
+import axios from "axios";
+import { Order, OrderItem, Product } from "./data";
+import { User } from "@/context/user-context";
+
+
+
+class ApiClient {
+  baseUrl: string;
+  constructor() {
+    this.baseUrl = "http://localhost:4000";
+  }
+
+
+
+  async sendOrder(items: OrderItem[], receiveDate: string, returnDate: string, reason: string) {
+    try {
+      await axios.post(`${this.baseUrl}/order`, {
+        items,
+        receiveDate,
+        returnDate,
+        reason
+      })
+    } catch (error: any) {
+      console.error(error);
+      throw new Error('Order creation failed due to ' + error.message);
+    }
+  }
+
+  async getOrdersByUser(userId: string): Promise<Order[]> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/orders/${userId}`);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      throw new Error('Failed to fetch orders due to ' + error.message);
+    }
+  }
+
+
+
+  async getProducts(): Promise<Product[]> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/products`);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      throw new Error('Failed to fetch products due to ' + error.message);
+    }
+  }
+
+  async getProductById(productId: string): Promise<Product> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/products/${productId}`);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      throw new Error('Failed to fetch product due to ' + error.message);
+    }
+  }
+
+  async login(userCode: string, password: string): Promise<string> {
+    try {
+      const response = await axios.post(`${this.baseUrl}/auth/login`, {
+        userCode,
+        password
+      });
+      console.log(response.data);
+      return response.data.token;
+    } catch (error: any) {
+      console.error(error);
+      throw new Error('Login failed due to ' + error.message);
+    }
+  }
+
+  async checkToken(token: string): Promise<User | undefined> {
+    try {
+      const UserData = await axios.get(`${this.baseUrl}/auth/me?token=${token}`);
+
+      if (UserData) {
+        return UserData.data;
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+}
+
+export default new ApiClient();
