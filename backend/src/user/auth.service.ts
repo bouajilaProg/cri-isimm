@@ -19,7 +19,7 @@ export class AuthService {
 
     if (user) {
       console.log(user)
-      const token = this.jwtService.sign({ userCode: userCode });
+      const token = this.jwtService.sign({ userCode: userCode, tel: user.tel, email: user.email, name: user.name });
       console.log(token)
       console.log(this.jwtService.decode(token))
 
@@ -28,7 +28,6 @@ export class AuthService {
     return null
 
   }
-
 
   async checkUserToken(token: string) {
 

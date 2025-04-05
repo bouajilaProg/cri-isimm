@@ -6,7 +6,8 @@
   "scripts": {
     "build": "nest build",
     "start:dev": "nest start --watch",
-    "start:prod": "node ."
+    "start:prod": "node .",
+    "db:seed": "node ./src/database/database-seed.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "@nestjs/mongoose": "^11.0.3",
     "@nestjs/platform-express": "^11.0.12",
     "dotenv": "^16.4.7",
+    "mongodb": "^6.15.0",
     "mongoose": "^8.13.1",
     "reflect-metadata": "0.2"
   },
