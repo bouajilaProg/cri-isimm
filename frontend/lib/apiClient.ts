@@ -28,7 +28,7 @@ class ApiClient {
 
   async getOrdersByUser(userId: string): Promise<Order[]> {
     try {
-      const response = await axios.get(`${this.baseUrl}/orders/${userId}`);
+      const response = await axios.get(`${this.baseUrl}/order/user/${userId}`);
       return response.data;
     } catch (error: any) {
       console.error(error);
@@ -77,7 +77,14 @@ class ApiClient {
       const UserData = await axios.get(`${this.baseUrl}/auth/me?token=${token}`);
 
       if (UserData) {
-        return UserData.data;
+        const response: User = {
+          userCode: UserData.data.userCode,
+          tel: UserData.data.tel,
+          email: UserData.data.email,
+          name: UserData.data.name
+        }
+
+        return response;
       }
     } catch (error: any) {
       console.error(error);

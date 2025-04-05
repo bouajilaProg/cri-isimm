@@ -10,6 +10,7 @@ export interface User {
   name: string;
 }
 
+
 // Define the context type
 interface UserContextType {
   userData: User;
