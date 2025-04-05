@@ -45,8 +45,27 @@ export class UserOrderService {
 
   async sendOrder(userID: string, orderItems: any[], receiveDate: string, returnDate: string, reason: string) {
 
+    // Validate the input data
+    if (!userID || !orderItems || orderItems.length === 0 || !receiveDate || !returnDate || !reason) {
+      //      throw new Error("Invalid input data");
+      console.log("userID", userID);
+      console.log("orderItems", orderItems);
+      console.log("receiveDate", receiveDate);
+      console.log("returnDate", returnDate);
+      console.log("reason", reason);
+      return { message: "Invalid input data", error: "INVALID_INPUT" };
+    }
+
+    // get the user id
+    const user_id = (await this.userModel.findOne({ userCode: userID }).exec())?._id;
+
+    if (!user_id) {
+      console.log("User not found");
+      return { message: "User not found", error: "USER_NOT_FOUND" };
+    }
+
     const orderToSave = new this.orderModel({
-      userId: userID,
+      userId: user_id,
       items: orderItems,
       status: 'pending',
       receiveDate,
@@ -55,5 +74,17 @@ export class UserOrderService {
       reason,
     });
     const savedOrder = await orderToSave.save();
+
+    // Update the user with the new order
+    const user = await this.userModel.findById(user_id).exec();
+    if (user) {
+      user.orders.push(savedOrder);
+      await user.save();
+    } else {
+      console.log("User not found");
+      return { message: "User not found", error: "USER_NOT_FOUND" };
+    }
+
+    console.log("successfully saved order", savedOrder);
   }
 }

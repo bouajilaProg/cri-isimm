@@ -9,14 +9,13 @@ import { useUser } from "@/context/user-context";
 import apiClient from "@/lib/apiClient";
 
 export default function OrderHistory() {
-  const { userData, setUserData } = useUser(); // Extract userData and setUserData from context
+  const { userData, setUserData } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [expandedOrders, setExpandedOrders] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("User Data:", userData);
     async function getUserData() {
       if (userData?.userCode === "" && localStorage.getItem("user-token")) {
         const userdata = await apiClient.checkToken(localStorage.getItem("user-token") as string);
@@ -87,7 +86,7 @@ export default function OrderHistory() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h3 className="font-medium">Order #{order.id}</h3>
+                    <h3 className="font-medium">Order {order.id}</h3>
                     <Badge className={getStatusColor(order.status)}>
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </Badge>

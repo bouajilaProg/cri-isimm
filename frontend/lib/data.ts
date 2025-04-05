@@ -130,7 +130,7 @@ export const mockOrders: Order[] = [
     receiveDate: "2023-06-01",
     returnDate: "2023-06-15",
     createdAt: "2023-05-15",
-    reason: "need for project",
+    reason: "Needed for a robotics project",
   },
   {
     id: "order2",
@@ -146,7 +146,7 @@ export const mockOrders: Order[] = [
     receiveDate: "2023-07-15",
     returnDate: "2023-07-29",
     createdAt: "2023-06-15",
-    reason: "experimenting with new hardware",
+    reason: "For a home automation project",
   },
 ]
 

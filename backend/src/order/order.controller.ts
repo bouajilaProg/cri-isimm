@@ -1,4 +1,4 @@
-import { Controller, Get, InternalServerErrorException, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, InternalServerErrorException, NotFoundException, Param, Post, Query } from '@nestjs/common';
 import { UserOrderService } from './user-order.service';
 
 @Controller('order')
@@ -36,15 +36,15 @@ export class OrderController {
 
 
 
-  @Post("/")
+
+  @Post('/')
   async sendOrder(
-    userID: string,
-    orderItems: any[],
-    receiveDate: string,
-    returnDate: string,
-    reason: string
+    @Body('userID') userID: string,
+    @Body('items') orderItems: any[],
+    @Body('receiveDate') receiveDate: string,
+    @Body('returnDate') returnDate: string,
+    @Body('reason') reason: string,
   ) {
     return this.orderService.sendOrder(userID, orderItems, receiveDate, returnDate, reason);
   }
-
 }

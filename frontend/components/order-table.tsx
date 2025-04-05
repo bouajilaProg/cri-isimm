@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { Calendar, Trash2, AlertCircle, Plus, Minus } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useOrder } from "@/context/order-context"
 import { useToast } from "@/hooks/use-toast"
+import apiClient from "@/lib/apiClient"
+import { useUser } from "@/context/user-context"
 
 export default function OrderTable() {
   const { items, receiveDate, returnDate, reason, removeItem, updateItemQuantity, updateOrderDetails, clearOrder } =
@@ -17,6 +19,22 @@ export default function OrderTable() {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
+  const { setUserData, userData } = useUser()
+
+
+  // get the user code
+  useEffect(() => {
+    const userCode = localStorage.getItem("user-token")
+    if (userCode) {
+      apiClient.checkToken(userCode).then((response) => {
+        if (response?.userCode !== "" && response) {
+          setUserData(response)
+        }
+      })
+    }
+  }
+  )
+
 
   const handleSubmitOrder = () => {
     // Validate all fields are filled
@@ -67,10 +85,24 @@ export default function OrderTable() {
 
     // Submit order (simulated)
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setShowSuccessDialog(true)
-    }, 1500)
+
+
+    console.log("Submitting order with the following details:")
+    console.log("Items:", items)
+    console.log("Receive Date:", receiveDate)
+    console.log("Return Date:", returnDate)
+    console.log("Reason:", reason)
+    console.log("Submitting order to API...")
+    apiClient.sendOrder(userData.userCode, items, receiveDate, returnDate, reason)
+
+    toast({
+      title: "Submitting order...",
+      description: "Your order is being processed.",
+      variant: "default",
+    })
+
+    setIsSubmitting(false)
+    setShowSuccessDialog(true)
   }
 
   const handleCloseSuccessDialog = () => {

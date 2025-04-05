@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Order, OrderItem, Product } from "./data";
-import { User } from "@/context/user-context";
+import { User, useUser } from "@/context/user-context";
 
 
 
@@ -12,9 +12,10 @@ class ApiClient {
 
 
 
-  async sendOrder(items: OrderItem[], receiveDate: string, returnDate: string, reason: string) {
+  async sendOrder(userCode: string, items: OrderItem[], receiveDate: string, returnDate: string, reason: string) {
     try {
       await axios.post(`${this.baseUrl}/order`, {
+        userID: userCode,
         items,
         receiveDate,
         returnDate,
