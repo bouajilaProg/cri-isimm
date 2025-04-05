@@ -1,13 +1,18 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ClientApiService } from './client-api.service';
 
-@Controller('items')
+@Controller('item')
 export class ItemsController {
   constructor(private readonly clientApiService: ClientApiService) { }
 
   @Get()
   getAllItems() {
     return this.clientApiService.getAllItems();
+  }
+
+  @Get("categories")
+  getCategories() {
+    return this.clientApiService.getCategories();
   }
 
   @Get(':id')

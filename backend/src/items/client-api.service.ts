@@ -19,4 +19,10 @@ export class ClientApiService {
     const item = await this.itemModel.findById(id).exec();
     return item;
   }
+
+  async getCategories() {
+    const items = await this.itemModel.find().exec();
+    const categories = [...new Set(items.map(item => item.category))];
+    return categories;
+  }
 }

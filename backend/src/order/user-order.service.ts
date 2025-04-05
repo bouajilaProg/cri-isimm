@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Order } from './order.entity';
 import { Model } from 'mongoose';
 import { User } from 'src/user/user.entity';
+import { Item } from 'src/items/item.entity';
 
 @Injectable()
 export class UserOrderService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<Order>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Item.name) private itemModel: Model<Item>,
   ) { }
 
 
@@ -74,6 +76,18 @@ export class UserOrderService {
       reason,
     });
     const savedOrder = await orderToSave.save();
+
+    // update products
+    for (const item of orderItems) {
+      const product = await this.itemModel.findById(item.productId).exec();
+      if (product) {
+        product.stock -= item.quantity;
+        await product.save();
+      } else {
+        console.log("Product not found");
+        return { message: "Product not found", error: "PRODUCT_NOT_FOUND" };
+      }
+    }
 
     // Update the user with the new order
     const user = await this.userModel.findById(user_id).exec();
