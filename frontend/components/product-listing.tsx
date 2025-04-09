@@ -20,7 +20,7 @@ export default function ProductListing() {
 
     async function fetchProducts() {
       const products: Product[] = await apiClient.getProducts();
-      const categories: string[] = await apiClient.getCategories();
+      const categories: string[] = [...(await apiClient.getCategories()), "All"];
 
       setProducts(products);
       setCategories(categories);

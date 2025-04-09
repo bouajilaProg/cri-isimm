@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { useOrder } from "@/context/order-context"
 
@@ -13,17 +13,21 @@ export default function Navbar() {
   const { getTotalItems } = useOrder()
   const totalItems = getTotalItems()
 
-  // Removed "Home" link as requested
   const routes = [
     { name: "Equipment", path: "/rt" },
     { name: "Order", path: "/order" },
     { name: "Profile", path: "/profile" },
   ]
 
+
+
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href={(localStorage.getItem("user-token")) ? "/rt" : "/"}
+
+          className="flex items-center space-x-2">
           <span className="text-xl font-bold">Robotics Club</span>
         </Link>
 
