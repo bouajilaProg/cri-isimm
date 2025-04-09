@@ -1,22 +1,49 @@
-import { notFound } from "next/navigation"
+"use client"
+
+import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import AddToOrderButton from "@/components/add-to-order-button"
-import { products } from "@/lib/data"
+import apiClient from "@/lib/apiClient"
+import { useEffect, useState } from "react"
+import { Product } from "@/lib/data"
 
-interface ProductPageProps {
-  params: {
-    id: string
-  }
-}
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = products.find((p) => p.id === params.id)
+export default function ProductPage() {
+
+
+  const params = useParams()
+  const [product, setProduct] = useState<Product | null>(null)
+  useEffect(() => {
+
+    const fetchProduct = async () => {
+
+      const productId = String(params?.id || "")
+      const product = await apiClient.getProductById(productId)
+      setProduct(product)
+      console.log(product)
+
+      if (!product) {
+        notFound()
+      }
+    }
+
+    fetchProduct()
+  }, [])
+
+
 
   if (!product) {
-    notFound()
+    return (
+      <div className="container px-4 py-8">
+        <div className="text-center text-3xl">Product not found</div>
+      </div>
+    )
   }
+
+
+
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -39,11 +66,10 @@ export default function ProductPage({ params }: ProductPageProps) {
 
               <div className="mb-6 mt-2">
                 <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    product.stock > 0
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
-                  }`}
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${product.stock > 0
+                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+                    }`}
                 >
                   {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
                 </span>

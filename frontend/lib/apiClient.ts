@@ -38,26 +38,51 @@ class ApiClient {
   }
 
 
+  async getCategories(): Promise<string[]> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/item/categories`);
+      return response.data;
+    } catch (error: any) {
+      console.error(error);
+      throw new Error('Failed to fetch categories due to ' + error.message);
+    }
+  }
+
 
   async getProducts(): Promise<Product[]> {
     try {
-      const response = await axios.get(`${this.baseUrl}/products`);
-      return response.data;
+      const response = await axios.get(`${this.baseUrl}/item`);
+      const data = response.data;
+
+      // Map _id to id so React component works properly
+      const products: Product[] = data.map((product: any) => ({
+        id: product._id,
+        name: product.name,
+        description: product.description,
+        category: product.category,
+        stock: product.stock,
+        image: product.image,
+      }));
+
+      return products;
     } catch (error: any) {
       console.error(error);
       throw new Error('Failed to fetch products due to ' + error.message);
     }
   }
 
+
   async getProductById(productId: string): Promise<Product> {
     try {
-      const response = await axios.get(`${this.baseUrl}/products/${productId}`);
+      const response = await axios.get(`${this.baseUrl}/item/${productId}`);
+
       return response.data;
     } catch (error: any) {
       console.error(error);
       throw new Error('Failed to fetch product due to ' + error.message);
     }
   }
+
 
   async login(userCode: string, password: string): Promise<string> {
     try {

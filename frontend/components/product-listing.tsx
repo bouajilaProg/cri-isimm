@@ -1,19 +1,47 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { products, categories } from "@/lib/data"
 import ProductCard from "@/components/product-card"
+import apiClient from "@/lib/apiClient"
+import { Product } from "@/lib/data"
 
 export default function ProductListing() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [availabilityFilter, setAvailabilityFilter] = useState("all")
+  const [products, setProducts] = useState([] as Product[])
+  const [categories, setCategories] = useState([] as string[])
 
-  const filteredProducts = products.filter((product) => {
+  useEffect(() => {
+
+    async function fetchProducts() {
+      const products: Product[] = await apiClient.getProducts();
+      const categories: string[] = await apiClient.getCategories();
+
+      setProducts(products);
+      setCategories(categories);
+
+    }
+
+
+    fetchProducts()
+  }
+  )
+
+
+  if (products.length === 0 || products === undefined) {
+    return (
+
+      <div className="container px-4 py-8">
+        <div className="text-center text-3xl">No products found</div>
+      </div>)
+  }
+
+  const filteredProducts = products.filter((product: Product) => {
     // Search filter
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -85,7 +113,7 @@ export default function ProductListing() {
       {/* Product Grid */}
       {filteredProducts.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredProducts.map((product) => (
+          {filteredProducts.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

@@ -16,7 +16,7 @@ export class ClientApiService {
   }
 
   async getItem(id: string) {
-    const item = await this.itemModel.findById(id).exec();
+    const item = await this.itemModel.findOne({ _id: id }).exec();
     return item;
   }
 

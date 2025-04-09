@@ -1,9 +1,9 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/login/page": "app/login/page.js",
-  "/page": "app/page.js",
-  "/order/page": "app/order/page.js",
+  "/profile/page": "app/profile/page.js",
   "/rt/page": "app/rt/page.js",
+  "/order/page": "app/order/page.js",
   "/product/[id]/page": "app/product/[id]/page.js",
-  "/profile/page": "app/profile/page.js"
+  "/page": "app/page.js"
 }
