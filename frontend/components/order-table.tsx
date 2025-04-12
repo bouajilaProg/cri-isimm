@@ -24,6 +24,19 @@ export default function OrderTable() {
 
   // get the user code
   useEffect(() => {
+    // hethi el fayda menha tna7i el error mta3 build ken fama 7al e5er a3mlouh
+    if (typeof window !== "undefined") {
+      const userCode = localStorage.getItem("user-token")
+      if (userCode) {
+        apiClient.checkToken(userCode).then((response) => {
+          if (response?.userCode !== "" && response) {
+            setUserData(response)
+          }
+        })
+      }
+    }
+  }, [])
+  useEffect(() => {
     const userCode = localStorage.getItem("user-token")
     if (userCode) {
       apiClient.checkToken(userCode).then((response) => {
@@ -33,7 +46,7 @@ export default function OrderTable() {
       })
     }
   }
-  )
+    , [])
 
 
   const handleSubmitOrder = () => {

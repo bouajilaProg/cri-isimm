@@ -9,6 +9,7 @@ import { useOrder } from "@/context/order-context"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [userToken, setUserToken] = useState<string | null>(null)
   const pathname = usePathname()
   const { getTotalItems } = useOrder()
   const totalItems = getTotalItems()
@@ -19,15 +20,17 @@ export default function Navbar() {
     { name: "Profile", path: "/profile" },
   ]
 
-
-
+  // Check if user token is available in localStorage (client-side)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserToken(localStorage.getItem("user-token"))
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href={(localStorage.getItem("user-token")) ? "/rt" : "/"}
-
-          className="flex items-center space-x-2">
+        <Link href={userToken ? "/rt" : "/"} className="flex items-center space-x-2">
           <span className="text-xl font-bold">Robotics Club</span>
         </Link>
 
@@ -86,4 +89,3 @@ export default function Navbar() {
     </header>
   )
 }
-
