@@ -1,0 +1,35 @@
+services:
+  app:
+    container_name: nest_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      - webnet
+
+  caddy:
+    container_name: caddy
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - webnet
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  webnet:
+    driver: bridge
