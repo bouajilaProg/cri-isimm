@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UserOrderService } from './user-order.service';
-import { DatabaseModule } from 'src/database/database.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Order, OrderSchema, OrderItem, OrderItemSchema } from './order.entity';
 import { OrderController } from './order.controller';
@@ -9,7 +8,6 @@ import { Item, ItemSchema } from 'src/items/item.entity';
 
 @Module({
   imports: [
-    DatabaseModule,
     MongooseModule.forFeature([
       { name: Order.name, schema: OrderSchema },
       { name: OrderItem.name, schema: OrderItemSchema },
